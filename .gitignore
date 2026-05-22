@@ -1,9 +1,14 @@
 # binaries
 devgrep
+devgrep-*
 bin/
+
+# windows
 *.exe
 *.exe~
 *.dll
+
+# shared libs
 *.so
 *.dylib
 
@@ -12,16 +17,15 @@ bin/
 
 # coverage
 coverage.out
-*.out
 
 # build/dist
 dist/
 
-# local agent / tooling
+# local tooling
 .agents/
 .codex/
 
-# environment / caches
+# env/cache
 .env
 .cache
 tmp/
