@@ -10,7 +10,7 @@ import (
 
 const (
 	migrationCleanupCorruptHistoryCWD = 2
-	migrationForceHistoryCWDReplay      = 3
+	migrationForceHistoryCWDReplay    = 3
 )
 
 // RepairCorruptHistoryCWD removes invalid shell history cwd data and resets incremental
