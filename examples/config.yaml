@@ -1,0 +1,46 @@
+database_path: ~/.local/share/devgrep/devgrep.db
+
+indexed_paths:
+  - .
+  - ~/notes
+  - ~/Documents
+
+ignored_directories:
+  - .git
+  - node_modules
+  - vendor
+  - .venv
+  - target
+  - dist
+  - build
+  - .next
+  - .cache
+
+ranking:
+  fuzzy: 0.38
+  recency: 0.26
+  frequency: 0.10
+  exact: 0.16
+  command_length: 0.02
+  directory_relevance: 0.08
+
+tui:
+  name: devgrep
+  accent: "#7DD3FC"
+  muted: "#6B7280"
+  error: "#F87171"
+  warning: "#FBBF24"
+  success: "#34D399"
+
+history:
+  limit: 200000
+
+logs:
+  max_file_size_mb: 32
+  extensions:
+    - .log
+
+indexing:
+  max_files: 100000
+  max_file_size_mb: 32
+  auto_watch: true

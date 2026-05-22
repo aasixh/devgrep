@@ -1,0 +1,35 @@
+# binaries
+devgrep
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# test binaries
+*.test
+
+# coverage
+coverage.out
+*.out
+
+# build/dist
+dist/
+
+# local agent / tooling
+.agents/
+.codex/
+
+# environment / caches
+.env
+.cache
+tmp/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+  <rect width="1100" height="640" fill="#0b1020"/>
+  <rect x="28" y="26" width="1044" height="588" rx="10" fill="#111827" stroke="#374151"/>
+  <text x="54" y="72" fill="#7DD3FC" font-family="monospace" font-size="28" font-weight="700">devgrep</text>
+  <text x="210" y="72" fill="#F9FAFB" font-family="monospace" font-size="20">search: docker postgres</text>
+  <rect x="54" y="110" width="450" height="460" rx="8" fill="#0f172a" stroke="#374151"/>
+  <rect x="76" y="136" width="406" height="42" rx="4" fill="#7DD3FC"/>
+  <text x="92" y="164" fill="#111827" font-family="monospace" font-size="18">docker compose up -d postgres</text>
+  <text x="92" y="206" fill="#6B7280" font-family="monospace" font-size="16">history 92</text>
+  <text x="92" y="254" fill="#F9FAFB" font-family="monospace" font-size="18">psql -h localhost -U app</text>
+  <text x="92" y="296" fill="#6B7280" font-family="monospace" font-size="16">history 81</text>
+  <rect x="530" y="110" width="520" height="460" rx="8" fill="#0f172a" stroke="#374151"/>
+  <text x="558" y="154" fill="#7DD3FC" font-family="monospace" font-size="18" font-weight="700">[history]</text>
+  <text x="558" y="196" fill="#F9FAFB" font-family="monospace" font-size="20">docker compose up -d postgres</text>
+  <text x="558" y="258" fill="#7DD3FC" font-family="monospace" font-size="18" font-weight="700">[last used]</text>
+  <text x="558" y="294" fill="#F9FAFB" font-family="monospace" font-size="18">3 weeks ago</text>
+  <text x="558" y="356" fill="#7DD3FC" font-family="monospace" font-size="18" font-weight="700">[directory]</text>
+  <text x="558" y="392" fill="#F9FAFB" font-family="monospace" font-size="18">~/projects/auth-api</text>
+  <text x="54" y="598" fill="#6B7280" font-family="monospace" font-size="16">j/k nav  gg/G top/bottom  / search  y copy  enter run  q quit</text>
+</svg>

@@ -1,0 +1,67 @@
+version: 2
+
+project_name: devgrep
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: devgrep
+    main: .
+    binary: devgrep
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/devgrep/devgrep/cmd.Version={{.Version}}
+      - -X github.com/devgrep/devgrep/cmd.Commit={{.Commit}}
+      - -X github.com/devgrep/devgrep/cmd.Date={{.Date}}
+
+archives:
+  - id: default
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - README.md
+      - LICENSE*
+      - docs/**
+      - examples/**
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+brews:
+  - name: devgrep
+    repository:
+      owner: devgrep
+      name: homebrew-tap
+    homepage: https://github.com/devgrep/devgrep
+    description: grep for developer workflows
+    license: MIT
+    install: |
+      bin.install "devgrep"
+    test: |
+      system "#{bin}/devgrep", "version"
