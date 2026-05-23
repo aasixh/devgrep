@@ -26,22 +26,18 @@ and indexed project workflows.
 </p>
 
 </div>
-**devgrep** is a terminal-native search engine for developer workflows. It indexes shell history, log files, and markdown notes into a local SQLite database so you can recover commands, debugging steps, and project context without digging through scattered files.
+devgrep is a terminal-native search engine for developer workflows. It indexes shell history, log files, and markdown notes into a local SQLite database so you can recover commands, debugging steps, and project context without digging through scattered files.
 
 No cloud. No accounts. No telemetry. No AI layer — just fast, offline search in your terminal.
 
 <p align="center">
-  <video 
-    src="https://raw.githubusercontent.com/aasixh/devgrep/main/assets/devgrep-demo-fixed.mp4"
+  <img 
+    src="assets/devgrep-demo.gif" 
+    alt="devgrep demo"
     width="900"
-    autoplay
-    loop
-    muted
-    playsinline
-  ></video>
+  />
 </p>
 
----
 
 ## Why devgrep
 
