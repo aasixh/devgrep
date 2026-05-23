@@ -32,7 +32,7 @@ No cloud. No accounts. No telemetry. No AI layer — just fast, offline search i
 
 <p align="center">
   <video 
-    src="https://raw.githubusercontent.com/aasixh/devgrep/main/assets/devgrep-demo.mp4"
+    src="https://raw.githubusercontent.com/aasixh/devgrep/main/assets/devgrep-demo-fixed.mp4"
     width="900"
     autoplay
     loop
