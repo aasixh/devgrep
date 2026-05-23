@@ -31,7 +31,14 @@ and indexed project workflows.
 No cloud. No accounts. No telemetry. No AI layer — just fast, offline search in your terminal.
 
 <p align="center">
-  <img src="assets/screenshot-search.svg" alt="devgrep search TUI" width="720">
+  <video 
+    src="https://raw.githubusercontent.com/aasixh/devgrep/main/assets/devgrep-demo.mp4"
+    width="900"
+    autoplay
+    loop
+    muted
+    playsinline
+  ></video>
 </p>
 
 ---
