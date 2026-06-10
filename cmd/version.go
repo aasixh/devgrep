@@ -9,7 +9,7 @@ import (
 
 var (
 	// Version is replaced by release builds.
-	Version = "0.1.0-dev"
+	Version = "dev"
 	// Commit is replaced by release builds.
 	Commit = "none"
 	// Date is replaced by release builds.
