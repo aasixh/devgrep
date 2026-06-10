@@ -39,18 +39,16 @@ No cloud. No accounts. No telemetry. No AI layer — just fast, offline search i
 </p>
 
 
-## Why devgrep
+## Documentations
 
-You fix a hard problem once. The command lives in history for a week, then vanishes behind newer entries, log rotations, and half-written notes.
+Comprehensive documentation, including usage guides, is available at [Devgrep Docs](https://devgrep.vercel.app/)
 
-devgrep keeps those breadcrumbs searchable:
+* [Getting Started](https://devgrep.vercel.app/docs/getting-started)
+* [Commands list](https://devgrep.vercel.app/docs/commands)
+* [Some examples](https://devgrep.vercel.app/docs/examples)
+* [Contributing](https://devgrep.vercel.app/docs/contributing)
 
-- shell commands you already ran
-- deployment and Docker workflows
-- log lines with severity
-- markdown notes and runbooks
 
-Everything stays on your machine in `~/.local/share/devgrep/devgrep.db`.
 
 ---
 
@@ -79,147 +77,7 @@ make build
 
 Platforms: Linux, macOS, and Windows (`amd64` / `arm64`) via manual method (docs/release.md).
 
----
 
-## Quick start
-
-```sh
-# Build your first index (shell history + default paths)
-devgrep index
-
-# Search — opens the TUI when stdout is a terminal
-devgrep search "docker postgres"
-
-# Shorthand (same as search)
-devgrep docker postgres
-```
-
-**Plain output** for scripts and pipes:
-
-```sh
-devgrep --plain search "kube auth failed" --source history,logs
-```
-
-```text
-[history]
-docker compose up -d postgres
-
-[last used]
-3 weeks ago
-
-[directory]
-~/projects/auth-api
-
-[score]
-92
-```
-
-**Index a project** before searching its logs and notes:
-
-```sh
-devgrep index .
-devgrep search "migration failed"
-```
-
----
-
-## Example workflows
-
-### Recover a shell command
-
-```sh
-devgrep search "kubectl rollout undo"
-```
-
-Results show the original command, when you last ran it, and the working directory inferred from history.
-
-### Find a deployment step
-
-```sh
-devgrep --plain search "terraform apply staging"
-```
-
-### Search project logs
-
-```sh
-devgrep index ~/projects/api
-devgrep search --source logs "connection refused"
-devgrep search --source logs --tail --regex "ERROR|WARN"
-```
-
-### Search markdown notes
-
-```sh
-devgrep search --source notes "postgres failover"
-```
-
-### Inspect what is indexed
-
-```sh
-devgrep sources
-devgrep sources --tree
-devgrep stats
-devgrep doctor
-```
-
----
-
-## Features
-
-| | |
-| --- | --- |
-| **Local-first** | SQLite storage, WAL mode, incremental indexing |
-| **Shell history** | Bash and zsh, duplicate suppression, cwd inference |
-| **Logs** | `.log` files with severity detection and tail mode |
-| **Notes** | Markdown fragments from configured paths |
-| **Search** | Fuzzy matching with typo-tolerant ranking fallback |
-| **TUI** | Full-screen Bubble Tea UI, vim-style navigation |
-| **Watch mode** | `fsnotify` re-indexing for explicit project paths |
-| **Unix-friendly** | `--plain` output, direct search shorthand, pipe-safe |
-| **Operational** | `sources`, `stats`, and `doctor` for visibility |
-
----
-
-## How indexing works
-
-```text
-  ~/.bash_history ──┐
-  ~/.zsh_history  ──┼──► indexers ──► SQLite ──► search + ranking ──► TUI / plain output
-  *.log, *.md     ──┘         ▲
-                              │
-                    incremental offsets + watch
-```
-
-1. **Indexers** parse history, logs, and notes into normalized documents.
-2. **Storage** persists documents, source offsets, and search stats.
-3. **Search** loads candidates from SQLite, applies fuzzy matching, and ranks results.
-4. **Commands** expose indexing, search, and maintenance through Cobra.
-
-Shell history is indexed incrementally. Log and note indexers walk configured paths with shared ignore rules (`.git`, `node_modules`, large files, binaries, and more).
-
----
-
-## Sources
-
-| Source | Location | Label in results |
-| --- | --- | --- |
-| Shell history | `~/.bash_history`, `~/.zsh_history` | `[history]` |
-| Logs | `.log` under `indexed_paths` | `[log]` |
-| Notes | `.md` under `indexed_paths` | `[note]` |
-
-Default note/log discovery paths (overridable in config):
-
-```text
-.
-~/notes
-~/Documents
-```
-
-Config: `~/.config/devgrep/config.yaml` · Database: `~/.local/share/devgrep/devgrep.db`
-
-See [examples/config.yaml](examples/config.yaml) and [docs/config.md](docs/config.md).
-
----
 
 ## Commands
 
@@ -245,65 +103,7 @@ See [examples/config.yaml](examples/config.yaml) and [docs/config.md](docs/confi
 
 ---
 
-## Interactive TUI
 
-When stdout is a TTY, search opens a full-screen interface:
-
-<p align="center">
-  <img src="assets/screenshot-doctor.svg" alt="devgrep doctor output" width="520">
-</p>
-
-| Key | Action |
-| --- | --- |
-| `/` | Focus live search |
-| `j` / `k` | Move selection |
-| `gg` / `G` | Jump to top / bottom |
-| `enter` | Run selected history command |
-| `y` | Copy selected result |
-| `esc` / `q` | Quit |
-
-Log and note previews include nearby context lines when the source file is still on disk.
-
----
-
-## Watch mode
-
-Indexing an explicit directory persists it as a watched path and, by default, keeps it synchronized:
-
-```sh
-devgrep index ~/projects/api
-```
-
-Watch mode uses `fsnotify` with debounced updates. New and modified files are re-indexed; deleted files are removed from the database.
-
-```sh
-devgrep index ~/projects/api --no-watch   # index once
-devgrep index --watch                     # restore saved watchers
-```
-
-Risky paths (`/`, `~`) require confirmation unless you pass `--yes`. Use `--dry-run` to inspect a tree before indexing.
-
----
-
-## Architecture
-
-```text
-cmd/                  Cobra commands and CLI wiring
-internal/history/     bash/zsh parsing and incremental history indexing
-internal/logs/        log indexing and tail mode
-internal/indexer/     pluggable indexer interface, markdown notes
-internal/storage/     SQLite migrations, documents, source state
-internal/search/      fuzzy search, formatting, result types
-internal/ranking/     scoring model (recency, frequency, fuzzy, cwd, …)
-internal/tui/         Bubble Tea interface
-internal/doctor/      health checks
-```
-
-New sources implement the `Indexer` interface in `internal/indexer` without changing command wiring.
-
-Deeper detail: [docs/architecture.md](docs/architecture.md)
-
----
 
 ## Configuration
 
@@ -324,17 +124,10 @@ make lint     # golangci-lint or go vet
 make bench    # includes 100k-document search benchmark
 ```
 
-Contributions welcome. Good starting points: new local source indexers, ranking improvements, shell-specific history metadata, and benchmarks.
-
-Please keep changes **offline-first**, **terminal-first**, and **dependency-conscious**.
 
 ---
 
-## Privacy
 
-devgrep does not phone home. It does not collect usage data, queries, commands, paths, or logs. Indexing and search happen entirely on local files you point it at.
-
----
 
 ## License
 

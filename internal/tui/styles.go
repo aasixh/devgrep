@@ -6,17 +6,18 @@ import (
 )
 
 type styles struct {
-	Header   lipgloss.Style
-	Footer   lipgloss.Style
-	Panel    lipgloss.Style
-	Title    lipgloss.Style
-	Query    lipgloss.Style
-	Muted    lipgloss.Style
-	Status   lipgloss.Style
-	Section  lipgloss.Style
-	ListItem lipgloss.Style
-	Selected lipgloss.Style
-	Meta     lipgloss.Style
+	Header    lipgloss.Style
+	Footer    lipgloss.Style
+	Panel     lipgloss.Style
+	SearchBar lipgloss.Style
+	Title     lipgloss.Style
+	Query     lipgloss.Style
+	Muted     lipgloss.Style
+	Status    lipgloss.Style
+	Section   lipgloss.Style
+	ListItem  lipgloss.Style
+	Selected  lipgloss.Style
+	Meta      lipgloss.Style
 }
 
 func newStyles(cfg config.Config) styles {
@@ -30,6 +31,10 @@ func newStyles(cfg config.Config) styles {
 			Padding(0, 1).
 			Background(lipgloss.Color("#111827")),
 		Panel: lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#374151")).
+			Padding(0, 1),
+		SearchBar: lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("#374151")).
 			Padding(0, 1),

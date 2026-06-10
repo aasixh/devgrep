@@ -24,7 +24,7 @@ dist/
 # local tooling
 .agents/
 .codex/
-
+.cursor/
 # env/cache
 .env
 .cache

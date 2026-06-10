@@ -150,22 +150,22 @@ func (m model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.loading = true
 			return m, m.searchCmd(m.query)
 		case tea.KeyBackspace:
-			if len(m.query) > 0 {
-				r := []rune(m.query)
-				m.query = string(r[:len(r)-1])
-				m.loading = true
-				return m, m.searchCmd(m.query)
-			}
-			return m, nil
+			return m.withQuery(backspaceQuery(m.query))
 		case tea.KeyCtrlC:
 			return m, tea.Quit
+		case tea.KeyCtrlU:
+			return m.withQuery("")
+		case tea.KeySpace:
+			return m.withQuery(m.query + " ")
 		case tea.KeyRunes:
-			m.query += string(msg.Runes)
-			m.loading = true
-			return m, m.searchCmd(m.query)
+			return m.withQuery(m.query + string(msg.Runes))
 		default:
 			return m, nil
 		}
+	}
+
+	if msg.Type == tea.KeyCtrlU {
+		return m.withQuery("")
 	}
 
 	switch msg.String() {
@@ -223,38 +223,81 @@ func (m model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		return m, nil
 	default:
+		if msg.Type == tea.KeySpace {
+			m.searchMode = true
+			return m.withQuery(m.query + " ")
+		}
+		if msg.Type == tea.KeyRunes {
+			m.searchMode = true
+			return m.withQuery(m.query + string(msg.Runes))
+		}
 		m.pendingG = false
 		return m, nil
 	}
+}
+
+func (m model) withQuery(query string) (tea.Model, tea.Cmd) {
+	if query == m.query && !m.loading {
+		return m, nil
+	}
+	m.query = query
+	m.loading = true
+	return m, m.searchCmd(m.query)
+}
+
+func backspaceQuery(query string) string {
+	if query == "" {
+		return ""
+	}
+	r := []rune(query)
+	return string(r[:len(r)-1])
 }
 
 func (m model) View() string {
 	if m.width == 0 {
 		return "loading devgrep..."
 	}
-	header := m.renderHeader()
 	footer := m.renderFooter()
-	bodyHeight := max(1, m.height-lipgloss.Height(header)-lipgloss.Height(footer))
+	bodyHeight := max(1, m.height-lipgloss.Height(footer))
 	listWidth := clamp(m.width*45/100, 34, max(34, m.width-24))
 	previewWidth := max(20, m.width-listWidth-1)
+	searchBar := m.renderSearchBar(listWidth)
+	listHeight := max(1, bodyHeight-lipgloss.Height(searchBar))
+	leftPane := lipgloss.JoinVertical(
+		lipgloss.Left,
+		searchBar,
+		m.renderList(listWidth, listHeight),
+	)
 	body := lipgloss.JoinHorizontal(
 		lipgloss.Top,
-		m.renderList(listWidth, bodyHeight),
+		leftPane,
 		m.renderPreview(previewWidth, bodyHeight),
 	)
-	return lipgloss.JoinVertical(lipgloss.Left, header, body, footer)
+	return lipgloss.JoinVertical(lipgloss.Left, body, footer)
 }
 
-func (m model) renderHeader() string {
-	query := m.query
+func (m model) renderSearchBar(width int) string {
 	cursor := " "
 	if m.searchMode && m.cursorOn {
 		cursor = "|"
 	}
-	left := m.styles.Title.Render("devgrep")
-	right := m.styles.Query.Render("Search: " + query + cursor)
-	line := lipgloss.JoinHorizontal(lipgloss.Center, left, "  ", right)
-	return m.styles.Header.Width(m.width).Render(line)
+
+	queryText := "Search: " + m.query + cursor
+	cwdText := utils.RelHome(currentWorkingDirectory())
+	innerWidth := max(1, width-4)
+	spacer := "  "
+
+	line := m.styles.Query.Render(utils.Truncate(queryText, innerWidth))
+	remaining := innerWidth - len([]rune(queryText)) - len([]rune(spacer))
+	if cwdText != "" && remaining >= 8 {
+		line = lipgloss.JoinHorizontal(
+			lipgloss.Top,
+			m.styles.Query.Render(queryText),
+			spacer,
+			m.styles.Muted.Render(utils.Truncate(cwdText, remaining)),
+		)
+	}
+	return m.styles.SearchBar.Width(width).Render(line)
 }
 
 func (m model) renderList(width, height int) string {
@@ -291,16 +334,16 @@ func (m model) renderList(width, height int) string {
 	for len(rows) < height-2 {
 		rows = append(rows, "")
 	}
-	return m.styles.Panel.Width(width).Height(height).Render(strings.Join(rows, "\n"))
+	return m.styles.Panel.Width(width).Height(panelContentHeight(height)).Render(strings.Join(rows, "\n"))
 }
 
 func (m model) renderPreview(width, height int) string {
 	current, ok := m.current()
 	if !ok {
 		if m.emptyDB {
-			return m.styles.Panel.Width(width).Height(height).Render(m.styles.Section.Render("No index found.") + "\n" + m.styles.Muted.Render("Run:\ndevgrep index"))
+			return m.styles.Panel.Width(width).Height(panelContentHeight(height)).Render(m.styles.Section.Render("No index found.") + "\n" + m.styles.Muted.Render("Run:\ndevgrep index"))
 		}
-		return m.styles.Panel.Width(width).Height(height).Render(m.styles.Section.Render("No results found.") + "\n" + m.styles.Muted.Render("Try a broader query."))
+		return m.styles.Panel.Width(width).Height(panelContentHeight(height)).Render(m.styles.Section.Render("No results found.") + "\n" + m.styles.Muted.Render("Try a broader query."))
 	}
 	doc := current.Document
 	innerWidth := max(10, width-4)
@@ -338,7 +381,7 @@ func (m model) renderPreview(width, height int) string {
 		}
 	}
 	content := strings.Join(sections, "\n")
-	return m.styles.Panel.Width(width).Height(height).Render(content)
+	return m.styles.Panel.Width(width).Height(panelContentHeight(height)).Render(content)
 }
 
 func (m model) renderFooter() string {
@@ -404,6 +447,14 @@ func (m model) engineNow() time.Time {
 		return m.engine.Now()
 	}
 	return time.Now()
+}
+
+func currentWorkingDirectory() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	return cwd
 }
 
 func wrap(s string, width int) string {
@@ -475,6 +526,10 @@ func previewContextLines(path string, line int, width int, radius int) string {
 		lines = append(lines, utils.Truncate(prefix+scanner.Text(), width))
 	}
 	return strings.Join(lines, "\n")
+}
+
+func panelContentHeight(totalHeight int) int {
+	return max(1, totalHeight-2)
 }
 
 func clamp(value, minValue, maxValue int) int {

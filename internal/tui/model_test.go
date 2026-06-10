@@ -10,9 +10,11 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/devgrep/devgrep/internal/config"
 	searchpkg "github.com/devgrep/devgrep/internal/search"
 	"github.com/devgrep/devgrep/internal/storage"
+	"github.com/devgrep/devgrep/internal/utils"
 )
 
 func TestModelRendersResultAndNavigation(t *testing.T) {
@@ -25,7 +27,7 @@ func TestModelRendersResultAndNavigation(t *testing.T) {
 		{Document: storage.Document{SourceType: searchpkg.SourceHistory, Content: "kubectl get pods", CWD: "/tmp", EventTime: time.Now()}, Score: 50},
 	}
 	view := m.View()
-	if !strings.Contains(view, "devgrep") || !strings.Contains(view, "docker compose") {
+	if !strings.Contains(view, "Search: docker") || !strings.Contains(view, "docker compose") {
 		t.Fatalf("view did not include expected content: %s", view)
 	}
 	next, _ := m.handleKey(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
@@ -42,6 +44,14 @@ func TestModelRendersResultAndNavigation(t *testing.T) {
 	if !strings.HasSuffix(updated.query, "x") {
 		t.Fatalf("query = %q", updated.query)
 	}
+	next, cmd = updated.handleKey(tea.KeyMsg{Type: tea.KeyCtrlU})
+	if cmd == nil {
+		t.Fatal("expected clear search command")
+	}
+	updated = next.(model)
+	if updated.query != "" {
+		t.Fatalf("query after ctrl-u = %q", updated.query)
+	}
 	next, _ = updated.Update(resultsMsg{query: updated.query, results: updated.results})
 	updated = next.(model)
 	if updated.loading {
@@ -51,6 +61,106 @@ func TestModelRendersResultAndNavigation(t *testing.T) {
 	updated = next.(model)
 	if !strings.Contains(updated.status, "copy failed") {
 		t.Fatalf("status = %q", updated.status)
+	}
+}
+
+func TestViewFitsTerminalWithoutClippingSearchBar(t *testing.T) {
+	m := newModel(context.Background(), searchpkg.Engine{}, config.Default(), "python3 test.py", searchpkg.Options{})
+	m.width = 100
+	m.height = 24
+	m.loading = false
+	m.searchMode = true
+	m.cursorOn = true
+	m.results = []searchpkg.Result{
+		{Document: storage.Document{SourceType: searchpkg.SourceHistory, Content: "python3 test.py", CWD: "/tmp", EventTime: time.Now()}, Score: 90},
+	}
+
+	view := m.View()
+	if got := lipgloss.Height(view); got > m.height {
+		t.Fatalf("view height = %d, want <= %d:\n%s", got, m.height, view)
+	}
+	if !strings.Contains(view, "Search: python3 test.py|") {
+		t.Fatalf("search query was not visible in fitted view:\n%s", view)
+	}
+}
+
+func TestSearchBarPreservesSpacesInTypedQuery(t *testing.T) {
+	m := newModel(context.Background(), searchpkg.Engine{}, config.Default(), "", searchpkg.Options{})
+	m.width = 120
+	m.height = 24
+	m.loading = false
+	m.searchMode = true
+	m.cursorOn = true
+
+	updated := m
+	for _, r := range "python3 test.py" {
+		msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{r}}
+		if r == ' ' {
+			msg = tea.KeyMsg{Type: tea.KeySpace}
+		}
+		next, _ := updated.Update(msg)
+		updated = next.(model)
+	}
+
+	if updated.query != "python3 test.py" {
+		t.Fatalf("query = %q, want python3 test.py", updated.query)
+	}
+	if view := updated.View(); !strings.Contains(view, "Search: python3 test.py|") {
+		t.Fatalf("search bar did not preserve spaced query:\n%s", view)
+	}
+}
+
+func TestSearchBarTracksActiveQueryThroughUpdate(t *testing.T) {
+	m := newModel(context.Background(), searchpkg.Engine{}, config.Default(), "", searchpkg.Options{})
+	m.width = 140
+	m.height = 30
+	m.loading = false
+	m.searchMode = true
+	m.cursorOn = true
+
+	updated := m
+	var cmd tea.Cmd
+	for _, r := range "python" {
+		next, nextCmd := updated.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{r}})
+		cmd = nextCmd
+		updated = next.(model)
+	}
+	if cmd == nil {
+		t.Fatal("expected search command after typing")
+	}
+	if updated.query != "python" {
+		t.Fatalf("query = %q, want python", updated.query)
+	}
+	view := updated.View()
+	if !strings.Contains(view, "Search: python|") {
+		t.Fatalf("search bar did not show typed query:\n%s", view)
+	}
+	if cwd, err := os.Getwd(); err == nil && !strings.Contains(view, utils.RelHome(cwd)) {
+		t.Fatalf("search bar did not show current directory %q:\n%s", utils.RelHome(cwd), view)
+	}
+
+	next, cmd := updated.Update(tea.KeyMsg{Type: tea.KeyBackspace})
+	if cmd == nil {
+		t.Fatal("expected search command after backspace")
+	}
+	updated = next.(model)
+	if updated.query != "pytho" {
+		t.Fatalf("query = %q, want pytho", updated.query)
+	}
+	if view := updated.View(); !strings.Contains(view, "Search: pytho|") {
+		t.Fatalf("search bar did not show backspaced query:\n%s", view)
+	}
+
+	next, cmd = updated.Update(tea.KeyMsg{Type: tea.KeyCtrlU})
+	if cmd == nil {
+		t.Fatal("expected search command after ctrl-u")
+	}
+	updated = next.(model)
+	if updated.query != "" {
+		t.Fatalf("query = %q, want empty", updated.query)
+	}
+	if view := updated.View(); !strings.Contains(view, "Search: |") {
+		t.Fatalf("search bar did not clear query:\n%s", view)
 	}
 }
 
