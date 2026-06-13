@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/storage"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/storage"
 )
 
 // Result aliases the shared search result type for pluggable indexers.

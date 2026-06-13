@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/ranking"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/ranking"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/sahilm/fuzzy"
 )
 

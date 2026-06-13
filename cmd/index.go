@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/history"
-	idxpkg "github.com/devgrep/devgrep/internal/indexer"
-	"github.com/devgrep/devgrep/internal/logs"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/history"
+	idxpkg "github.com/aasixh/devgrep/internal/indexer"
+	"github.com/aasixh/devgrep/internal/logs"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 )

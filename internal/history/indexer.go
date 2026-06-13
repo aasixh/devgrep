@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/config"
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/config"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 )
 
 // ShellHistoryIndexer indexes bash and zsh history files.

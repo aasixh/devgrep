@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/logs"
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/tui"
+	"github.com/aasixh/devgrep/internal/logs"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/tui"
 	"github.com/spf13/cobra"
 )
 

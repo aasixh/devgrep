@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-repo="devgrep/devgrep"
+repo="aasixh/devgrep"
 bin_dir="${BIN_DIR:-$HOME/.local/bin}"
 version="${DEVGREP_VERSION:-latest}"
 os="$(uname -s | tr '[:upper:]' '[:lower:]')"

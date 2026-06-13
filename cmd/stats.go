@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/devgrep/devgrep/internal/utils"
 	"github.com/spf13/cobra"
 )
 

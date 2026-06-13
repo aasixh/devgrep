@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/storage"
 )
 
 func TestScorePrefersRecentExactFrequentCommands(t *testing.T) {

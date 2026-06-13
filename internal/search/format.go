@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/utils"
 )
 
 // PrintPlain writes search results in a Unix-friendly, readable block format.

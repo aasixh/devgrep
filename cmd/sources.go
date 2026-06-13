@@ -7,9 +7,9 @@ import (
 	"sort"
 	"strings"
 
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/spf13/cobra"
 )
 

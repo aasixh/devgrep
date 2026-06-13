@@ -1,7 +1,7 @@
 package history
 
 import (
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/utils"
 )
 
 // ResumeCWD validates incremental indexing cwd state before parser replay.

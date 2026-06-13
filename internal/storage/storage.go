@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/utils"
 	_ "modernc.org/sqlite"
 )
 

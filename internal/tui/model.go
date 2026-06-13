@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aasixh/devgrep/internal/config"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/utils"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/devgrep/devgrep/internal/config"
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/utils"
 )
 
 // Run starts the interactive devgrep TUI.

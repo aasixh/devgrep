@@ -8,9 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/spf13/cobra"
 )
 

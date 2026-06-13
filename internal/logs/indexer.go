@@ -8,11 +8,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/parser"
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/parser"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 )
 
 // LogIndexer indexes plaintext .log files.

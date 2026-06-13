@@ -1,8 +1,8 @@
 package tui
 
 import (
+	"github.com/aasixh/devgrep/internal/config"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/devgrep/devgrep/internal/config"
 )
 
 type styles struct {

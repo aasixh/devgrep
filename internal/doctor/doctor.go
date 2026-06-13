@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aasixh/devgrep/internal/config"
+	"github.com/aasixh/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/utils"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/devgrep/devgrep/internal/config"
-	"github.com/devgrep/devgrep/internal/storage"
-	"github.com/devgrep/devgrep/internal/utils"
 )
 
 const (

@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/devgrep/devgrep/internal/config"
-	searchpkg "github.com/devgrep/devgrep/internal/search"
-	"github.com/devgrep/devgrep/internal/storage"
+	"github.com/aasixh/devgrep/internal/config"
+	searchpkg "github.com/aasixh/devgrep/internal/search"
+	"github.com/aasixh/devgrep/internal/storage"
 )
 
 func TestNoteIndexerIndexesMarkdown(t *testing.T) {

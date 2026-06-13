@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/devgrep/devgrep/cmd"
+	"github.com/aasixh/devgrep/cmd"
 )
 
 func TestIndexHistoryCommand(t *testing.T) {

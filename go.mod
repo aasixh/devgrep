@@ -1,4 +1,4 @@
-module github.com/devgrep/devgrep
+module github.com/aasixh/devgrep
 
 go 1.24.5
 

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/devgrep/devgrep/internal/doctor"
+	"github.com/aasixh/devgrep/internal/doctor"
 	"github.com/spf13/cobra"
 )
 

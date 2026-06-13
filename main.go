@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/devgrep/devgrep/cmd"
+	"github.com/aasixh/devgrep/cmd"
 )
 
 func main() {
