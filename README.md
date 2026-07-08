@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/logo.png" width="240" alt="devgrep logo" />
+
 
 <strong>Search your developer workflow history instantly.</strong>
 
