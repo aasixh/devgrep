@@ -181,8 +181,7 @@ func watchIndex(ctx context.Context, cfg config.Config, store *storage.Store, in
 			watchPaths = cfg.IndexedPaths
 		}
 	}
-	home := utils.MustHome()
-	watchPaths = append(watchPaths, filepath.Join(home, ".bash_history"), filepath.Join(home, ".zsh_history"))
+	watchPaths = append(watchPaths, historyPaths()...)
 	added := map[string]struct{}{}
 	for _, path := range watchPaths {
 		expanded, err := utils.ExpandHome(path)
@@ -363,8 +362,7 @@ func runDryRun(ctx context.Context, cfg config.Config, sources []string, paths [
 	}
 	summary := dryRunSummary{}
 	if sourceSet["history"] {
-		home := utils.MustHome()
-		for _, path := range []string{filepath.Join(home, ".bash_history"), filepath.Join(home, ".zsh_history")} {
+		for _, path := range historyPaths() {
 			info, err := os.Stat(path)
 			if err != nil || info.IsDir() {
 				continue
@@ -459,4 +457,18 @@ func countLines(path string) (int, error) {
 		count++
 	}
 	return count, scanner.Err()
+}
+
+func historyPaths() []string {
+	histFile := os.Getenv("HISTFILE")
+	if histFile != "" {
+		if expanded, err := utils.ExpandHome(histFile); err == nil && expanded != "" {
+			return []string{expanded}
+		}
+	}
+	home := utils.MustHome()
+	return []string{
+		filepath.Join(home, ".bash_history"),
+		filepath.Join(home, ".zsh_history"),
+	}
 }
